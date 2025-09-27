@@ -15,18 +15,20 @@ XGBoost – Accuracy: 97% (saved model + label encoder)
 
 ✅ Confusion matrices and classification reports generated
 
-🔹 Work in Progress
+Handcrafted Features ( FFT + LBP + PRNU + correlation):
 
-🚧 CNN model training (baseline CNN with image inputs)
+SVM → ~72%
+Random Forest → ~71%
+XGBoost  → ~74%
 
-🚧 Hybrid CNN (CNN + handcrafted features like FFT, LBP, PRNU)
+Hybrid CNN (Residual Images + Handcrafted Features):
 
-🚧 Organizing results into results/ folder
+Achieved ~74.7% test accuracy
+Models saved (scanner_hybrid.keras, scanner_hybrid_final.keras)
 
-🔹 Next Steps
 
-Train & evaluate CNN model, compare with traditional ML.
 
+🔹 Next Steps:-
 Implement Hybrid CNN + handcrafted features.
 
 Finalize comparison table:

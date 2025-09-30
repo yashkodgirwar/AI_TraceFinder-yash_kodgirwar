@@ -1,0 +1,9 @@
+streamlit
+scikit-learn
+xgboost
+numpy
+pandas
+opencv-python-headless
+joblib
+tensorflow==2.20.0
+

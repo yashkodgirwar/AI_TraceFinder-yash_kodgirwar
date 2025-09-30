@@ -11,8 +11,16 @@ from tensorflow.keras.models import load_model
 # ---- Page Config ----
 st.set_page_config(page_title="AI TraceFinder", page_icon="🔍", layout="wide")
 
+# --- FILE PATH FIX FOR LOGO AND MODELS ---
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+LOGO_PATH = os.path.join(SCRIPT_DIR, "assets", "logo.png")
+# You should also use os.path.join for your model and log paths for robustness
+MODELS_DIR = os.path.join(SCRIPT_DIR, "models")
+LOGS_DIR = os.path.join(SCRIPT_DIR, "logs")
+
 # ---- Sidebar ----
-st.sidebar.image("assets/logo.png", use_container_width=True)
+# Use the corrected path variable
+st.sidebar.image(LOGO_PATH, use_container_width=True)
 st.sidebar.title("⚙️ Options")
 st.sidebar.success("Choose task and upload an image 🚀")
 
@@ -29,9 +37,10 @@ st.markdown("<h3 style='text-align:center;color:lightgreen;'>🔍 Smart Document
 # ---- Objective 1: Scanner Identification ----
 if task == "Scanner Identification":
     st.subheader("📌 Scanner Brand/Model Prediction")
-    
-    model = joblib.load("models/xgb_model.pkl")
-    le = joblib.load("models/label_encoder.pkl")
+
+    # Use os.path.join for model loading
+    model = joblib.load(os.path.join(MODELS_DIR, "xgb_model.pkl"))
+    le = joblib.load(os.path.join(MODELS_DIR, "label_encoder.pkl"))
 
     uploaded_file = st.file_uploader("📤 Upload scanned image", type=["jpg","jpeg","png","tif"])
     if uploaded_file is not None:
@@ -61,7 +70,9 @@ if task == "Scanner Identification":
                 st.progress(int(probs[i]*100))
 
             # ---- Logs ----
-            LOG_FILE = "logs/scanner_predictions.csv"
+            # Ensure log directory exists and use os.path.join for log file path
+            os.makedirs(LOGS_DIR, exist_ok=True)
+            LOG_FILE = os.path.join(LOGS_DIR, "scanner_predictions.csv")
             record = {
                 "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 "file_name": uploaded_file.name,
@@ -92,8 +103,8 @@ elif task == "Forgery Detection":
     st.subheader("📌 Document Forgery/Tampering Detection")
 
     # Load Ensemble Models
-    xgb_tampered = joblib.load("models/xgb_tampered.pkl")
-    cnn_tampered = load_model("models/tampered_cnn.keras")
+    xgb_tampered = joblib.load(os.path.join(MODELS_DIR, "xgb_tampered.pkl"))
+    cnn_tampered = load_model(os.path.join(MODELS_DIR, "tampered_cnn.keras"))
 
     uploaded_file = st.file_uploader("📤 Upload document image", type=["jpg","jpeg","png","tif"])
     if uploaded_file is not None:
@@ -130,7 +141,9 @@ elif task == "Forgery Detection":
                 st.progress(int(final_proba[i]*100))
 
             # ---- Logs ----
-            LOG_FILE = "logs/forgery_predictions.csv"
+            # Ensure log directory exists and use os.path.join for log file path
+            os.makedirs(LOGS_DIR, exist_ok=True)
+            LOG_FILE = os.path.join(LOGS_DIR, "forgery_predictions.csv")
             record = {
                 "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 "file_name": uploaded_file.name,
